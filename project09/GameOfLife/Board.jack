@@ -1,0 +1,189 @@
+// Create board gridX x gridY to play game of life
+// Board is a two dimenshion array with 0 as dead cells and 1 as alive
+// Board is initialized as oscillating pattern (pulsar)
+
+class Board {
+   field int gridX, gridY;
+   field TwoDimArray units, count;
+
+   constructor Board new(int w, int h) {
+      let gridX = w;
+      let gridY = h;
+      let units = TwoDimArray.initWithZero(w, h);
+      let count = TwoDimArray.initWithZero(w, h);
+
+      return this;
+   }
+
+   constructor Board createDemo(int w, int h) {
+      let gridX = w;
+      let gridY = h;
+      let units = TwoDimArray.initWithZero(w, h);
+      let count = TwoDimArray.initWithZero(w, h);
+
+      do createUnits();
+      return this;
+   }
+
+   method void applyRules() {
+      var int i, j, val, cnt;
+
+      let i = 0;
+      while(i < gridX) {
+         let j = 0;
+         while(j < gridY) {
+            let val = units.get(i, j);
+
+            if(~(val = 0)) {
+               do countNeighbours(i,j);
+            }
+      
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+
+      let i = 0;
+      while(i < gridX) {
+         let j = 0;
+         while (j < gridY) {
+            let val = units.get(i, j);
+            let cnt = count.get(i, j);
+
+            if(~(val = 0) & ((cnt < 2) | (cnt > 3))) {
+               do units.set(i, j, 0);
+            } 
+
+            if((val = 0) & (cnt = 3)) {
+               do units.set(i, j, 1);
+            }
+
+            do count.set(i, j, 0);
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+
+      return;
+   }
+
+   method void dispose() {
+      do units.dispose();
+      do count.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method TwoDimArray getUnits() { return units; }
+   method int getSizeX() { return gridX; }
+   method int getSizeY() { return gridY; }
+   
+   method void setUnit(int x, int y, int val) { 
+      do units.set(x, y, val);  
+      return;
+   }
+
+   method int getUnitVal(int x, int y) { return units.get(x, y); }
+
+   method void createUnits() {
+      if(gridX > 14 & gridX > 14) {
+         do initPulsar();
+      } else {
+         do units.set(gridX/2, gridY/2, 1);
+         do units.set(gridX/2, (gridY/2) - 1, 1);
+         do units.set(gridX/2, (gridY/2) + 1, 1);
+      }
+      
+      return;
+   }
+
+   method void initThreeVertical(int x, int y) {
+      var int i;
+      let i = 3;
+      while(i > 0) {
+         do units.set(x, y - i, 1);
+         let i = i - 1;
+      }
+      return;
+   }
+
+   method void initThreeHorizontal(int x, int y) {
+      var int i;
+      let i = 3;
+      while(i > 0) {
+         do units.set(x - i, y, 1);
+         let i = i - 1;
+      }
+      return;
+   }
+
+   method void initPulsar() {
+      var int centerX, centerY, i;
+      let centerX = gridX / 2;
+      let centerY = gridY / 2;
+      do initThreeVertical(centerX - 1, centerY - 1);
+      do initThreeVertical(centerX + 1, centerY - 1);
+      do initThreeVertical(centerX + 6, centerY - 1);
+      do initThreeVertical(centerX - 6, centerY - 1);
+      do initThreeVertical(centerX - 1, centerY + 5);
+      do initThreeVertical(centerX + 1, centerY + 5);
+      do initThreeVertical(centerX + 6, centerY + 5);
+      do initThreeVertical(centerX - 6, centerY + 5);
+
+      do initThreeHorizontal(centerX - 1, centerY - 1);
+      do initThreeHorizontal(centerX - 1, centerY + 1);
+      do initThreeHorizontal(centerX - 1, centerY + 6);
+      do initThreeHorizontal(centerX - 1, centerY - 6);
+      do initThreeHorizontal(centerX + 5, centerY + 1);
+      do initThreeHorizontal(centerX + 5, centerY - 1);
+      do initThreeHorizontal(centerX + 5, centerY + 6);
+      do initThreeHorizontal(centerX + 5, centerY - 6);
+      return;
+   }
+
+   method void countNeighbours(int x, int y) {
+      var int v;
+
+      if (x > 0) {
+         let v = count.get(x-1, y);
+         do count.set(x-1, y, v + 1);
+      } 
+
+      if (x > 0 & (y > 0)) {
+         let v = count.get(x-1, y-1);
+         do count.set(x-1, y-1, v + 1);
+      }
+
+      if (x > 0 & ((y + 1) < gridY)) {
+         let v = count.get(x-1, y+1);
+         do count.set(x-1, y+1, v + 1);
+      }
+      
+      if (y > 0) {
+         let v = count.get(x, y-1);
+         do count.set(x, y-1, v + 1);
+      }
+      
+      if (y > 0 & ((x + 1) < gridX)) {
+         let v = count.get(x+1, y-1);
+         do count.set(x+1, y-1, v + 1);
+      }
+      
+      if ((x + 1) < gridX) {
+         let v = count.get(x+1, y);
+         do count.set(x+1, y, v + 1);
+      }
+      
+      if ((y + 1) < gridY) {
+         let v = count.get(x, y+1);
+         do count.set(x, y+1, v + 1);
+      }
+      
+      if ((x + 1) < gridX & ((y+1) < gridY)) {
+         let v = count.get(x+1, y+1);
+         do count.set(x+1, y+1, v + 1);
+      }
+
+      return;
+   }
+}

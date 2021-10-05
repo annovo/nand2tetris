@@ -1,0 +1,221 @@
+function Render.create 0
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 3
+push argument 0
+pop this 1
+push constant 0
+pop this 2
+push constant 16
+pop this 0
+push pointer 0
+return
+function Render.createWithUnit 0
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 3
+push argument 0
+pop this 1
+push constant 0
+pop this 2
+push argument 1
+pop this 0
+push pointer 0
+return
+function Render.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Render.clear 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 1
+push this 2
+push this 4
+push this 5
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Render.clearAll 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push constant 0
+push constant 0
+push this 4
+push this 5
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Render.init 2
+push argument 0
+pop pointer 0
+push constant 511
+pop this 4
+push constant 255
+pop this 5
+push argument 1
+call Board.getSizeX 1
+pop local 0
+push argument 1
+call Board.getSizeY 1
+pop local 1
+push this 0
+push this 4
+push this 3
+sub
+push local 0
+call Math.divide 2
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 4
+push this 3
+sub
+push local 0
+call Math.divide 2
+pop this 0
+label IF_FALSE0
+push this 0
+push this 5
+push local 1
+call Math.divide 2
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 5
+push local 1
+call Math.divide 2
+pop this 0
+label IF_FALSE1
+push this 4
+push this 3
+sub
+push local 0
+push this 0
+call Math.multiply 2
+sub
+push constant 2
+call Math.divide 2
+push this 3
+add
+pop this 1
+push this 5
+push local 1
+push this 0
+call Math.multiply 2
+sub
+push constant 2
+call Math.divide 2
+pop this 2
+push local 0
+push this 0
+call Math.multiply 2
+push this 1
+add
+pop this 4
+push local 1
+push this 0
+call Math.multiply 2
+push this 2
+add
+pop this 5
+push constant 0
+return
+function Render.draw 8
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+push argument 1
+call Board.getSizeX 1
+pop local 6
+push argument 1
+call Board.getSizeY 1
+pop local 7
+push argument 1
+call Board.getUnits 1
+pop local 0
+label WHILE_EXP0
+push local 1
+push local 6
+lt
+not
+if-goto WHILE_END0
+push constant 0
+pop local 2
+label WHILE_EXP1
+push local 2
+push local 7
+lt
+not
+if-goto WHILE_END1
+push local 0
+push local 1
+push local 2
+call TwoDimArray.get 3
+pop local 5
+push local 5
+push constant 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 1
+push local 1
+push this 0
+call Math.multiply 2
+add
+pop local 3
+push this 2
+push local 2
+push this 0
+call Math.multiply 2
+add
+pop local 4
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 3
+push local 4
+push local 3
+push this 0
+add
+push local 4
+push this 0
+add
+call Screen.drawRectangle 4
+pop temp 0
+label IF_FALSE0
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP1
+label WHILE_END1
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return

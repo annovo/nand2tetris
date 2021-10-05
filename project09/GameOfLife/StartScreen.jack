@@ -1,0 +1,64 @@
+// Draw Screen panels:
+// - Introduction
+// - Info Panels
+// - Clear All 
+
+class StartScreen {
+   function void init() {
+      do Output.moveCursor(23/2 - 2, 64/2 - 13);
+      do Output.printString("WELCOME TO THE GAME OF LIFE");
+      do Output.moveCursor(23/2 - 1, 64/2 - 10);
+      do Output.printString("PRESS ENTER TO PLAY");
+      do Output.moveCursor(23/2, 64/2 - 11);
+      do Output.printString("PRESS D TO START DEMO");
+      return;
+   }
+
+   function void drawFrame() {
+      do Screen.setColor(true);
+      do Screen.drawLine(127, 2, 127, 235); 
+      do Screen.drawLine(2, 2, 2, 235); 
+      do Screen.drawLine(2, 235, 127, 235); 
+      do Screen.drawLine(2, 2, 127, 2); 
+      return;
+   }
+   
+   function void drawBoardMakingIntro() {
+      do Output.moveCursor(0, 64/2 - 13);
+      do Output.printString("MOVE SQUARE WITH THE ARROWS");
+      do Output.moveCursor(2, 64/2 - 16);
+      do Output.printString("PRESS SPACE TO SELECT OR UNSELECT");
+      do Output.moveCursor(20, 64/2 - 15);
+      do Output.printString("PRESS ENTER WHEN YOU'VE FINISHED");
+      do Output.moveCursor(22, 64/2 - 8);
+      do Output.printString("PRESS ESC TO EXIT");
+      return;
+   }
+
+   function void drawInfoPanel() {
+      do StartScreen.drawFrame();
+
+      do Output.moveCursor(3, 2);
+      do Output.printString("PRESS ESC TO");
+      do Output.moveCursor(5, 3);
+      do Output.printString("START OVER");
+      do Output.moveCursor(23/2, 2);
+      do Output.printString("PRESS SPACE");
+      do Output.moveCursor(23/2 + 2, 3);
+      do Output.printString("TO PAUSE");
+      do Output.moveCursor(23/2 + 4, 3);
+      do Output.printString("OR RESUME");
+
+      do Screen.setColor(true);  
+      do Screen.drawLine(62, 44, 86, 44);
+      do Screen.drawLine(62, 45, 86, 45);
+      do Screen.drawLine(62, 133, 102, 133);
+      do Screen.drawLine(62, 134, 102, 134);
+      return;
+   }
+   function void clear() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(0, 0, 511, 255);
+      return;
+   }
+}

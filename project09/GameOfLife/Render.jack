@@ -1,0 +1,82 @@
+class Render {
+   field int unitSize, offsetX, offsetY, initOffset, maxSizeX, maxSizeY;
+
+   constructor Render create(int scrOffset) {
+      let initOffset = scrOffset;
+      let offsetX = scrOffset;
+      let offsetY = 0;
+      let unitSize = 16;
+      return this;
+   }
+
+   constructor Render createWithUnit(int scrOffset, int uS) {
+      let initOffset = scrOffset;
+      let offsetX = scrOffset;
+      let offsetY = 0;
+      let unitSize = uS;
+      return this;
+   }
+
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void clear() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(offsetX, offsetY, maxSizeX, maxSizeY);
+      return;
+   }
+
+   method void clearAll() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(0, 0, maxSizeX, maxSizeY);
+      return;
+   }
+
+   method void init(Board b) {
+      var int sX, sY;
+      let maxSizeX = 511;
+      let maxSizeY = 255;
+      
+      let sX = b.getSizeX();
+      let sY = b.getSizeY();
+      if(unitSize > ((maxSizeX - initOffset) / sX)) {             
+         let unitSize = (maxSizeX - initOffset) / sX;
+      }
+      if(unitSize > (maxSizeY / sY)) {
+         let unitSize = maxSizeY / sY;
+      }
+      
+      let offsetX = (maxSizeX - initOffset -  (sX*unitSize)) / 2 + initOffset;
+      let offsetY = (maxSizeY - (sY*unitSize)) / 2;
+      let maxSizeX = sX*unitSize + offsetX;
+      let maxSizeY = sY*unitSize + offsetY;
+      return;
+   }
+
+   method void draw(Board b) {
+      var TwoDimArray units;
+      var int i, j, x, y, val, sizeX, sizeY;
+      let i = 0;
+      let sizeX = b.getSizeX();
+      let sizeY = b.getSizeY();
+      let units = b.getUnits();
+
+      while(i < sizeX) {
+         let j = 0;
+         while(j < sizeY) {
+            let val = units.get(i, j);
+            if(val = 1) {
+               let x = offsetX + (i*unitSize);
+               let y = offsetY + (j*unitSize);
+               do Screen.setColor(true);
+               do Screen.drawRectangle(x, y, x + unitSize, y + unitSize);
+            }
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+}

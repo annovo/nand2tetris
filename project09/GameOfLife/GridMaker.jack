@@ -1,0 +1,151 @@
+// Create and manage grid that will make a new board for the game
+// Min offset by X is 136 px
+// Min offset by Y is 26 px
+// Grid max size is 180 x 180 px
+// Grid divided by x and y cells
+// Global coordinates and pointers (local coordinates) is where current cell is located
+
+class GridMaker {
+   field int x, y, pointerX, pointerY, globalX, globalY, offsetX, offsetY, unitSize, cellSize, v;
+   field Board b;
+
+   constructor GridMaker new(int sizeX, int sizeY) {
+      let x = sizeX;
+      let pointerX = x / 2;
+      let y = sizeY;
+      let pointerY = y / 2;
+      let offsetX = 136;
+      let offsetY = 26;
+
+      do adjust();
+
+      let globalX = offsetX + (pointerX * cellSize) + 1;
+      let globalY = offsetY + (pointerY * cellSize) + 1;
+
+      let b = Board.new(x, y);
+
+      let v = b.getUnitVal(pointerX, pointerY);
+
+      do drawGrid();
+      do drawUnit();
+      return this;
+   }
+
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void adjust() {
+      if(180 / x > (180 / y)) {
+         let unitSize = 180 / y;                      // max global grid size
+      } else {
+         let unitSize = 180 / x;
+      }
+
+      if(unitSize < 5) {                             // min square size 
+         do Sys.error(5);
+      }
+
+      if(unitSize > 15) {                            // max square size 
+         let unitSize = 15;
+         let cellSize = unitSize + 2;
+         let offsetX = (512 - (cellSize*x)) / 2;     // screen size
+         let offsetY = (256 - (cellSize*y)) / 2;
+      } else {
+         let cellSize = unitSize + 2;
+      }
+      return;
+   }
+
+   method void moveRight() {
+      if(~(pointerX = (x - 1))) {
+         if(v = 0) { do clearCell();}
+
+         let pointerX = pointerX + 1;
+         let v = b.getUnitVal(pointerX, pointerY);
+         let globalX = globalX + cellSize;
+         do drawUnit();
+      }
+      return;
+   }
+
+   method void moveLeft() {
+      if(~(pointerX = 0)) {
+         if(v = 0) { do clearCell();}
+
+         let pointerX = pointerX - 1;
+         let v = b.getUnitVal(pointerX, pointerY);
+         let globalX = globalX - cellSize;
+         do drawUnit();
+      }
+      return;
+   }
+
+   method void moveDown() {
+      if(~(pointerY = (y - 1))) {
+         if(v = 0) { do clearCell();}
+
+         let pointerY = pointerY + 1;
+         let v = b.getUnitVal(pointerX, pointerY);
+         let globalY = globalY + cellSize;
+         do drawUnit();
+      }
+
+      return;
+   }
+
+   method void moveUp() {
+      if(~(pointerY = 0)) {
+         if(v = 0) { do clearCell();}
+
+         let pointerY = pointerY - 1;
+         let v = b.getUnitVal(pointerX, pointerY);
+         let globalY = globalY - cellSize;
+         do drawUnit();
+      }
+      return;
+   }
+
+   method Board getBoard() {return b;}
+
+   method void changeBoard() { 
+      if(v = 0) {
+         let v = 1;    
+      } else  {
+         let v = 0;
+      }
+      do b.setUnit(pointerX, pointerY, v); 
+      return; 
+   }
+
+   method void clearCell() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(globalX, globalY, globalX + unitSize, globalY + unitSize);
+      return;
+   }
+
+   method void drawUnit() {
+      do Screen.setColor(true);
+      do Screen.drawRectangle(globalX, globalY, globalX + unitSize, globalY + unitSize);
+      return;
+   }
+
+   method void drawGrid() {
+      var int i;
+      let i = 0;
+      do Screen.setColor(true);
+      while((i - 1) < x) {
+         do Screen.drawLine(offsetX + (i*cellSize), offsetY, offsetX + (i*cellSize), offsetY + (y*cellSize));
+         let i = i + 1;
+      }
+
+      let i = 0;
+      while((i - 1) < y) {
+         do Screen.drawLine(offsetX, offsetY + (i*cellSize), offsetX + (x*cellSize), offsetY + (i*cellSize));
+         let i = i + 1;
+      }
+      return;
+   }
+
+}

@@ -1,0 +1,121 @@
+// Unit is a square 16x16 px
+// Grid is a rectangle 384x256 px (24 x 16 units)
+// Center of the grid is (320, 128)
+// Init setup is Pulsar pattern 
+
+class GameOfLife {
+   field Board b;
+   field Render r;
+   field GridMaker gm;
+   field boolean playing, startPlay, startGM;
+   field int offset;
+
+   constructor GameOfLife new() {
+      var int dX, dY;
+      let offset = 127;
+      let r = Render.createWithUnit(offset, 16);
+      let playing = false;
+      let startPlay = false;
+      let startGM = false;
+      do StartScreen.init();
+      
+      return this;
+   }
+
+   method void dispose() {
+      do b.dispose();
+      do r.dispose();
+      do dm.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void play() {
+      if(playing) {
+         do r.clear();
+         do r.draw(b);
+         do b.applyRules();
+         do Sys.wait(100);
+      }
+      return;
+   }
+
+   method void run() {
+      var char key;
+      var boolean exit;
+
+      let b = Board.createDemo(15, 15);
+      do r.init(b);
+
+      while (~exit) {
+         while(key = 0) {
+            let key = Keyboard.keyPressed();
+            do play();
+         }
+         
+         if(key = 81) { let exit = true; }
+
+         if(key = 68 & (~startPlay) & (~startGM)) { 
+            do StartScreen.clear(); 
+            do StartScreen.drawInfoPanel(); 
+            let playing = true; 
+            let startPlay = true;
+         }
+
+         if(key = 140) { 
+            let startPlay = false;
+            let playing = false;
+            let startGM = false;
+
+            if(~(gm = null)) {
+               do gm.dispose();
+            }
+
+            do b.dispose();
+            let b = Board.createDemo(15,15);
+            do r.init(b);
+
+            do StartScreen.clear(); 
+            do StartScreen.init();
+         }
+
+
+         if(key = 130 & (startGM)) {do gm.moveLeft(); }
+         if(key = 132 & (startGM)) {do gm.moveRight(); }
+         if(key = 131 & (startGM)) {do gm.moveUp(); }
+         if(key = 133 & (startGM)) {do gm.moveDown(); }
+
+         if(key = 128 & (startGM)) { 
+            do StartScreen.clear(); 
+            do StartScreen.drawInfoPanel(); 
+
+            do b.dispose();
+            let b = gm.getBoard(); 
+            do r.init(b);
+
+            do gm.dispose();  
+            let startGM = false;
+
+            let playing = true; 
+            let startPlay = true;
+         }
+
+         if(key = 128 & (~startGM) &(~startPlay)) { 
+            do StartScreen.clear();
+            do StartScreen.drawBoardMakingIntro();
+            let gm = GridMaker.new(10,10);
+            let startGM = true;
+         }
+
+         if((key = 32) & (startPlay)) { let playing = ~playing; }
+         if((key = 32) & (startGM)) { do gm.changeBoard(); }
+         
+
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+         }
+      }
+      return;
+   }
+
+}

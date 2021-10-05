@@ -1,0 +1,305 @@
+function GameOfLife.new 2
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+push constant 127
+pop this 6
+push this 6
+push constant 16
+call Render.createWithUnit 2
+pop this 1
+push constant 0
+pop this 3
+push constant 0
+pop this 4
+push constant 0
+pop this 5
+call StartScreen.init 0
+pop temp 0
+push pointer 0
+return
+function GameOfLife.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Board.dispose 1
+pop temp 0
+push this 1
+call Render.dispose 1
+pop temp 0
+call dm.dispose 0
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function GameOfLife.play 0
+push argument 0
+pop pointer 0
+push this 3
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 1
+call Render.clear 1
+pop temp 0
+push this 1
+push this 0
+call Render.draw 2
+pop temp 0
+push this 0
+call Board.applyRules 1
+pop temp 0
+push constant 100
+call Sys.wait 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function GameOfLife.run 2
+push argument 0
+pop pointer 0
+push constant 15
+push constant 15
+call Board.createDemo 2
+pop this 0
+push this 1
+push this 0
+call Render.init 2
+pop temp 0
+label WHILE_EXP0
+push local 1
+not
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 0
+push constant 0
+eq
+not
+if-goto WHILE_END1
+call Keyboard.keyPressed 0
+pop local 0
+push pointer 0
+call GameOfLife.play 1
+pop temp 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 81
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 1
+label IF_FALSE0
+push local 0
+push constant 68
+eq
+push this 4
+not
+and
+push this 5
+not
+and
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+call StartScreen.clear 0
+pop temp 0
+call StartScreen.drawInfoPanel 0
+pop temp 0
+push constant 0
+not
+pop this 3
+push constant 0
+not
+pop this 4
+label IF_FALSE1
+push local 0
+push constant 140
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+pop this 4
+push constant 0
+pop this 3
+push constant 0
+pop this 5
+push this 2
+push constant 0
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push this 2
+call GridMaker.dispose 1
+pop temp 0
+label IF_FALSE3
+push this 0
+call Board.dispose 1
+pop temp 0
+push constant 15
+push constant 15
+call Board.createDemo 2
+pop this 0
+push this 1
+push this 0
+call Render.init 2
+pop temp 0
+call StartScreen.clear 0
+pop temp 0
+call StartScreen.init 0
+pop temp 0
+label IF_FALSE2
+push local 0
+push constant 130
+eq
+push this 5
+and
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push this 2
+call GridMaker.moveLeft 1
+pop temp 0
+label IF_FALSE4
+push local 0
+push constant 132
+eq
+push this 5
+and
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push this 2
+call GridMaker.moveRight 1
+pop temp 0
+label IF_FALSE5
+push local 0
+push constant 131
+eq
+push this 5
+and
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push this 2
+call GridMaker.moveUp 1
+pop temp 0
+label IF_FALSE6
+push local 0
+push constant 133
+eq
+push this 5
+and
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push this 2
+call GridMaker.moveDown 1
+pop temp 0
+label IF_FALSE7
+push local 0
+push constant 128
+eq
+push this 5
+and
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+call StartScreen.clear 0
+pop temp 0
+call StartScreen.drawInfoPanel 0
+pop temp 0
+push this 0
+call Board.dispose 1
+pop temp 0
+push this 2
+call GridMaker.getBoard 1
+pop this 0
+push this 1
+push this 0
+call Render.init 2
+pop temp 0
+push this 2
+call GridMaker.dispose 1
+pop temp 0
+push constant 0
+pop this 5
+push constant 0
+not
+pop this 3
+push constant 0
+not
+pop this 4
+label IF_FALSE8
+push local 0
+push constant 128
+eq
+push this 5
+not
+and
+push this 4
+not
+and
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+call StartScreen.clear 0
+pop temp 0
+call StartScreen.drawBoardMakingIntro 0
+pop temp 0
+push constant 10
+push constant 10
+call GridMaker.new 2
+pop this 2
+push constant 0
+not
+pop this 5
+label IF_FALSE9
+push local 0
+push constant 32
+eq
+push this 4
+and
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push this 3
+not
+pop this 3
+label IF_FALSE10
+push local 0
+push constant 32
+eq
+push this 5
+and
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push this 2
+call GridMaker.changeBoard 1
+pop temp 0
+label IF_FALSE11
+label WHILE_EXP2
+push local 0
+push constant 0
+eq
+not
+not
+if-goto WHILE_END2
+call Keyboard.keyPressed 0
+pop local 0
+goto WHILE_EXP2
+label WHILE_END2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return

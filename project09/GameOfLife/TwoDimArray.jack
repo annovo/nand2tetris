@@ -1,0 +1,61 @@
+class TwoDimArray {
+   field Array a;
+   field int width, height, size;
+
+   constructor TwoDimArray new(int x, int y) {
+      let width = x;
+      let height = y;
+      let size = y*x;
+      let a = Array.new(size);
+      return this;
+   }
+
+   constructor TwoDimArray initWithZero(int x, int y) {
+      let width = x;
+      let height = y;
+      let size = x*y;
+      let a = Array.new(size);
+      do init();
+      return this;
+   }
+
+   method void init() {
+      var int i;
+      let i = 0;
+      while(i < size) {
+         let a[i] = 0;
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method int get(int x, int y) {
+      var int index;
+      if((x < 0) | (y < 0) | ((x + 1) > width) | ((y + 1) > height)) {
+         do Sys.error(101);
+      }
+
+      let index = getIndex(x, y);
+      return a[index];
+   }
+
+   method int getIndex(int x, int y) {
+      return x + (y * width);
+   }
+
+   method void set(int x, int y, int val) {
+      var int ind;
+      if((x < 0) | (y < 0) | ((x + 1) > width) | ((y + 1) > height)) {
+         do Sys.error(101);
+      }
+
+      let ind = getIndex(x,y);
+      let a[ind] = val;
+      return;
+   }
+
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+}

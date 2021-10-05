@@ -1,0 +1,165 @@
+function TwoDimArray.new 0
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 1
+push argument 1
+pop this 2
+push argument 1
+push argument 0
+call Math.multiply 2
+pop this 3
+push this 3
+call Array.new 1
+pop this 0
+push pointer 0
+return
+function TwoDimArray.initWithZero 0
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 1
+push argument 1
+pop this 2
+push argument 0
+push argument 1
+call Math.multiply 2
+pop this 3
+push this 3
+call Array.new 1
+pop this 0
+push pointer 0
+call TwoDimArray.init 1
+pop temp 0
+push pointer 0
+return
+function TwoDimArray.init 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 3
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function TwoDimArray.get 1
+push argument 0
+pop pointer 0
+push argument 1
+push constant 0
+lt
+push argument 2
+push constant 0
+lt
+or
+push argument 1
+push constant 1
+add
+push this 1
+gt
+or
+push argument 2
+push constant 1
+add
+push this 2
+gt
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 101
+call Sys.error 1
+pop temp 0
+label IF_FALSE0
+push pointer 0
+push argument 1
+push argument 2
+call TwoDimArray.getIndex 3
+pop local 0
+push local 0
+push this 0
+add
+pop pointer 1
+push that 0
+return
+function TwoDimArray.getIndex 0
+push argument 0
+pop pointer 0
+push argument 1
+push argument 2
+push this 1
+call Math.multiply 2
+add
+return
+function TwoDimArray.set 1
+push argument 0
+pop pointer 0
+push argument 1
+push constant 0
+lt
+push argument 2
+push constant 0
+lt
+or
+push argument 1
+push constant 1
+add
+push this 1
+gt
+or
+push argument 2
+push constant 1
+add
+push this 2
+gt
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 101
+call Sys.error 1
+pop temp 0
+label IF_FALSE0
+push pointer 0
+push argument 1
+push argument 2
+call TwoDimArray.getIndex 3
+pop local 0
+push local 0
+push this 0
+add
+push argument 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function TwoDimArray.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
